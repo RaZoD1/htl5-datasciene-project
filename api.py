@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 from pydantic import BaseModel
-from pipeline import DecisionTreeModel
+from pipeline import RandomForestModel
 import pandas as pd
 
 app = FastAPI()
@@ -49,7 +49,7 @@ class NetworkData(BaseModel):
     dst_host_srv_rerror_rate: float
 
 
-model = DecisionTreeModel("https://docs.google.com/spreadsheets/d/e/2PACX-1vQkqK3rzUUOf-RIkiSU5RszMzHVwYgPTJUek6qjDrW6_F3MyJ-eETUa5UgiRzNdt6PhFtcKI6gioaj6/pub?gid=1746802197&single=true&output=csv")
+model = RandomForestModel("https://docs.google.com/spreadsheets/d/e/2PACX-1vQkqK3rzUUOf-RIkiSU5RszMzHVwYgPTJUek6qjDrW6_F3MyJ-eETUa5UgiRzNdt6PhFtcKI6gioaj6/pub?gid=1746802197&single=true&output=csv")
 model.run()
 
 

@@ -13,7 +13,7 @@ import seaborn as sns
 from sklearn.metrics import confusion_matrix
 
 
-class DecisionTreeModel:
+class RandomForestModel:
     def __init__(self, data_path, model_filename='model.pkl'):
         self.data_path = data_path
         self.model_filename = model_filename
@@ -181,7 +181,7 @@ class DecisionTreeModel:
 DATA_PATH="https://docs.google.com/spreadsheets/d/e/2PACX-1vQkqK3rzUUOf-RIkiSU5RszMzHVwYgPTJUek6qjDrW6_F3MyJ-eETUa5UgiRzNdt6PhFtcKI6gioaj6/pub?gid=1746802197&single=true&output=csv"
 
 if __name__ == '__main__':
-    model = DecisionTreeModel(DATA_PATH)
+    model = RandomForestModel(DATA_PATH)
     model.run()
 
   
