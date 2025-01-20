@@ -1,7 +1,7 @@
 import pandas as pd
 import joblib
 from sklearn.model_selection import train_test_split, GridSearchCV, cross_val_score
-from sklearn.tree import DecisionTreeClassifier
+from sklearn.ensemble import RandomForestClassifier
 from sklearn.preprocessing import StandardScaler, OneHotEncoder
 from sklearn.compose import ColumnTransformer
 from sklearn.pipeline import Pipeline
@@ -11,7 +11,6 @@ import matplotlib.pyplot as plt
 import numpy as np
 import seaborn as sns
 from sklearn.metrics import confusion_matrix
-from sklearn.ensemble import RandomForestClassifier
 
 
 class DecisionTreeModel:
@@ -28,7 +27,7 @@ class DecisionTreeModel:
         self.model_pipeline = None
 
     def load_data(self):
-        # Load the dataset
+        # Load the dataset from the provided CSV URL
         df = pd.read_csv(self.data_path)
 
         # Drop unnecessary columns
@@ -65,8 +64,11 @@ class DecisionTreeModel:
             ('cat', categorical_pipeline, categorical_cols)
         ])
 
+        # Fit the preprocessor on the training data
+        self.preprocessor.fit(self.X_train)
+
     def create_model_pipeline(self):
-        # Create the pipeline for decision tree model
+        # Create the pipeline for Random Forest model
         self.model_pipeline = Pipeline([
             ('preprocessor', self.preprocessor),
             ('classifier', RandomForestClassifier(random_state=42))
@@ -81,10 +83,10 @@ class DecisionTreeModel:
     def grid_search(self):
         # 2. Grid Search for hyperparameter tuning
         param_grid = {
-            'classifier__n_estimators': [100],
-            'classifier__max_depth': [10],
-            'classifier__min_samples_split': [5],
-            'classifier__min_samples_leaf': [1]
+            'classifier__n_estimators': [100, 200],
+            'classifier__max_depth': [10, 20, None],
+            'classifier__min_samples_split': [2, 5],
+            'classifier__min_samples_leaf': [1, 2]
         }
 
         grid_search = GridSearchCV(self.model_pipeline, param_grid, cv=5, n_jobs=-1, verbose=1)
@@ -156,11 +158,8 @@ class DecisionTreeModel:
             print("Model is not trained yet!")
             return None
 
-        # Preprocess new data
-        X_new_transformed = self.preprocessor.transform(X_new)
-
         # Predict and return results
-        predictions = self.best_model.predict(X_new_transformed)
+        predictions = self.best_model.predict(X_new)
         return predictions
 
     def run(self):
@@ -179,6 +178,12 @@ class DecisionTreeModel:
             self.save_model()  # Save the trained model
 
 
+DATA_PATH="https://docs.google.com/spreadsheets/d/e/2PACX-1vQkqK3rzUUOf-RIkiSU5RszMzHVwYgPTJUek6qjDrW6_F3MyJ-eETUa5UgiRzNdt6PhFtcKI6gioaj6/pub?gid=1746802197&single=true&output=csv"
+
 if __name__ == '__main__':
-    model = DecisionTreeModel("https://docs.google.com/spreadsheets/d/e/2PACX-1vQkqK3rzUUOf-RIkiSU5RszMzHVwYgPTJUek6qjDrW6_F3MyJ-eETUa5UgiRzNdt6PhFtcKI6gioaj6/pub?gid=1746802197&single=true&output=csv")
+    model = DecisionTreeModel(DATA_PATH)
     model.run()
+
+  
+
+    print(model.predict(model.X_test))
