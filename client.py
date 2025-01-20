@@ -35,15 +35,17 @@ for row in data:
 
 def predict(sample):
     res = requests.post(BASE_URL + "/predict", json = sample)
-    print(res.json())
+    return res.json()['prediction']
 
 for sample in normal_samples:
-    print("Actual: normal")
-    predict(sample)
-
+    p = predict(sample)
+    s = 'SUCCESS' if p == 'normal' else 'WRONG'
+    print(f"{s}: Predicted: '{p}' - Actual: 'normal'")
 
 
 for sample in anomaly_samples:
-    print("Actual: anomaly")
-    predict(sample)
+    p = predict(sample)
+    s = 'SUCCESS' if p == 'anomaly' else 'WRONG'
+    print(f"{s}: Predicted: '{p}' - Actual: 'anomaly'")
+
 
